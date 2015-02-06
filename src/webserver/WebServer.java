@@ -12,8 +12,8 @@ import java.net.Socket;
  * @author Edilson Gonzalez
  */
 public class WebServer extends Thread {
-    private final int PORT = 8080; //Puerto en el que se recibiran requests de clientes
-    ServerSocket server = null;
+    private final int PORT = 3000; //Puerto en el que se recibiran requests de clientes
+    private ServerSocket server = null;
    
     public WebServer() throws Exception {
         server = new ServerSocket(PORT);

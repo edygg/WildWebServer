@@ -26,27 +26,19 @@ public class WebServer extends Thread {
         while(true){
             try {
                 Socket clientRequest = server.accept();
-                PrintWriter out = new PrintWriter(clientRequest.getOutputStream(), true);
+                DataOutputStream out = new DataOutputStream(clientRequest.getOutputStream());
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientRequest.getInputStream()));
-                String data = in.readLine();
-                
-                while (data != null) {
-                    System.out.println(data);
-                    data = in.readLine();
-                }
-                
-                in.close();
-                out.close();
+               httpHandler( in , out);
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
         }
     }
     
-    private String construct_http_header(int return_code, int file_type) {
+    private String constructHTTPHeader(int returnCode, int fileType) {
         String s = "HTTP/1.1 ";
         
-        switch (return_code) {
+        switch (returnCode) {
           case 200:
             s += "200 OK";
             break;
@@ -69,9 +61,9 @@ public class WebServer extends Thread {
 
         s += "\r\n";
         s += "Connection: close\r\n";
-        s += "Server: SimpleHTTPtutorial v0\r\n";
+        s += "Server: WildWebServer v0\r\n";
         
-        switch (file_type) {
+        switch (fileType) {
           case 0:
             break;
           case 1:
@@ -90,7 +82,7 @@ public class WebServer extends Thread {
         return s;
     }
     
-    private void http_handler(BufferedReader input, DataOutputStream output) {
+    private void httpHandler(BufferedReader input, DataOutputStream output) {
     int method = 0; //1-GET 2-POST 0-NOT SUPPORTED
     String http = new String(); 
     String path = new String(); 
@@ -107,7 +99,7 @@ public class WebServer extends Thread {
         method = 2;
       } else if (method == 0) { 
         try {
-          output.writeBytes(construct_http_header(501, 0));
+          output.writeBytes(constructHTTPHeader(501, 0));
           output.close();
           return;
         } catch (Exception e) {
@@ -134,10 +126,10 @@ public class WebServer extends Thread {
     
     FileInputStream requestedfile = null;
     try {
-      requestedfile = new FileInputStream(path);
+      requestedfile = new FileInputStream("./index.html");
     }catch (Exception e) {
       try {
-        output.writeBytes(construct_http_header(404, 0));
+        output.writeBytes(constructHTTPHeader(404, 0));
         output.close();
       }catch (Exception e2) {
           e2.printStackTrace();
@@ -155,7 +147,7 @@ public class WebServer extends Thread {
       if (path.endsWith(".gif")) {
         type_is = 2;
       }
-      output.writeBytes(construct_http_header(200, 5));
+      output.writeBytes(constructHTTPHeader(200, 5));
 
       if (method == 1) {
         while (true) {

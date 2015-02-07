@@ -8,12 +8,12 @@ import java.io.PrintWriter;
  *
  * @author Edilson Gonzalez
  */
-public class Task extends Thread {
+public class Request extends Thread {
     
     private PrintWriter out;
     private BufferedReader in;
 
-    public Task(PrintWriter out, BufferedReader in) {
+    public Request(PrintWriter out, BufferedReader in) {
         this.out = out;
         this.in = in;
     }

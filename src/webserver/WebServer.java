@@ -12,6 +12,7 @@ import java.net.Socket;
  *
  * @author Edilson Gonzalez
  */
+
 public class WebServer extends Thread {
 
     private final int PORT = 3000; //Puerto en el que se recibiran requests de clientes

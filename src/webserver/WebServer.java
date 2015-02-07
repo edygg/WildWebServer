@@ -131,6 +131,9 @@ public class WebServer extends Thread {
         if(path.equals("/")){
          path+= "index.html";
         }
+        if(!path.endsWith(".html")){
+        path+=".html";
+        }
     }
     catch (Exception e) {
       e.printStackTrace();

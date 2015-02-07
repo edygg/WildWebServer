@@ -66,9 +66,17 @@ public class Request extends Thread {
                 break;
             case 2:
                 s += "Content-Type: image/gif\r\n";
+                break;
             case 3:
-                s += "Content-Type: application/x-zip-compressed\r\n";
-            default:
+                s += "Content-Type: application/javascript\r\n";
+                break;
+            case 4:
+                s += "Content-Type: text/css\r\n";
+                break;
+            case 5:
+                s += "Content-Type: image/png\r\n";
+                break;      
+            case 6:
                 s += "Content-Type: text/html\r\n";
                 break;
         }
@@ -105,7 +113,8 @@ public class Request extends Thread {
             if (path.equals("/")) {
                 path += "index.html";
             }
-            if (!path.endsWith(".html")) {
+            if (!path.endsWith(".html") && !path.endsWith(".css") && !path.endsWith(".js") && !path.endsWith(".jpg") && !path.endsWith(".jpeg") && 
+                    !path.endsWith(".png") && !path.endsWith(".gif")) {
                 path += ".html";
             }
         } catch (Exception e) {
@@ -138,7 +147,7 @@ public class Request extends Thread {
 
         try {
             int type_is = 0;
-            if (path.endsWith(".zip")) {
+            if (path.endsWith(".js")) {
                 type_is = 3;
             }
             if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
@@ -147,7 +156,16 @@ public class Request extends Thread {
             if (path.endsWith(".gif")) {
                 type_is = 2;
             }
-            output.writeBytes(constructHTTPHeader(200, 5));
+            if (path.endsWith(".css")) {
+                type_is = 4;
+            }
+            if (path.endsWith(".png")) {
+                type_is = 5;
+            }
+            if (path.endsWith(".html")) {
+                type_is = 6;
+            }
+            output.writeBytes(constructHTTPHeader(200, type_is));
 
             if (method == 1) {
                 while (true) {

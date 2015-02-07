@@ -1,6 +1,8 @@
 
 package webserver;
 
+import java.io.File;
+
 /**
  *
  * @author Edilson Gonzalez
@@ -8,7 +10,11 @@ package webserver;
 public class Main {
     
     public static void main(String[] args) {
-        try {
+        File file = new File("./Mi_web/");
+        file.mkdir();
+        
+        
+       try {
             WebServer server = new WebServer();
             server.start();
         } catch (Exception ex) {

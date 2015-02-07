@@ -39,24 +39,34 @@ public class WebServer extends Thread {
         String s = "HTTP/1.1 ";
         
         switch (returnCode) {
-          case 200:
-            s += "200 OK";
-            break;
-          case 400:
-            s += "400 Bad Request";
-            break;
-          case 403:
-            s += "403 Forbidden";
-            break;
-          case 404:
-            s += "404 Not Found";
-            break;
-          case 500:
-            s += "500 Internal Server Error";
-            break;
-          case 501:
-            s += "501 Not Implemented";
-            break;
+            case 200:
+                s += "200 OK";
+                break;
+            case 400:
+                s += "400 Bad Request";
+                break;
+
+            case 404:
+                s += "404 Not Found";
+                break;
+            case 405:
+                s += "405 Method Not Allowed";
+                break;
+            case 408:
+                s += "408 Request Timeout";
+                break;
+            case 415:
+                s += "415 Unsupported Media Type";
+                break;
+            case 500:
+                s += "500 Internal Server Error";
+                break;
+            case 501:
+                s += "501 Not Implemented";
+                break;
+            case 505:
+                s += "505 HTTP Version Not Supported";
+                break;
         }
 
         s += "\r\n";
@@ -90,9 +100,7 @@ public class WebServer extends Thread {
     String user_agent = new String();
     try {
       String tmp = input.readLine(); 
-      String tmp2 = new String(tmp);
-      tmp.toUpperCase(); 
-      
+     
       if (tmp.startsWith("GET")) { 
         method = 1;
       } else if (tmp.startsWith("POST")) { 
@@ -100,6 +108,7 @@ public class WebServer extends Thread {
       } else if (method == 0) { 
         try {
           output.writeBytes(constructHTTPHeader(501, 0));
+          input.close();
           output.close();
           return;
         } catch (Exception e) {
@@ -107,7 +116,7 @@ public class WebServer extends Thread {
         } 
       }
       
-      int start = 0;
+      /*int start = 0;
       int end = 0;
       for (int a = 0; a < tmp2.length(); a++) {
         if (tmp2.charAt(a) == ' ' && start != 0) {
@@ -117,8 +126,11 @@ public class WebServer extends Thread {
         if (tmp2.charAt(a) == ' ' && start == 0) {
           start = a;
         }
-      }
-      path = tmp2.substring(start + 2, end);
+      }*/
+      path = tmp.split(" ")[1];
+        if(path.equals("/")){
+         path+= "index.html";
+        }
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -126,7 +138,7 @@ public class WebServer extends Thread {
     
     FileInputStream requestedfile = null;
     try {
-      requestedfile = new FileInputStream("./index.html");
+      requestedfile = new FileInputStream("./Mi_web/"+path);
     }catch (Exception e) {
       try {
         output.writeBytes(constructHTTPHeader(404, 0));
